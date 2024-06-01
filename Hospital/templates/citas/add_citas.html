@@ -1,0 +1,150 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<!-- Breadcrumb -->
+				<!-- Page Title -->
+				<div class="container mt-0">
+					<div class="row breadcrumb-bar">
+						<div class="col-md-6">
+							<h3 class="block-title">Registrar Citas</h3>
+						</div>
+						<div class="col-md-6">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item">
+									<a href="index.html">
+										<span class="ti-home"></span>
+									</a>
+								</li>
+								<li class="breadcrumb-item">Citas</li>
+								<li class="breadcrumb-item active">Registrar Cita</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			<!-- /Page Title -->
+
+			<!-- /Breadcrumb -->
+			<!-- Main Content -->
+			<div class="container">
+
+				<div class="row">
+					<!-- Widget Item -->
+					<div class="col-md-12">
+						<div class="widget-area-2 proclinic-box-shadow">
+							<h3 class="widget-title">Registrar Cita</h3>
+							<form method="post" action="{% url 'add_citas' %}">
+								{% csrf_token %}
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="dni-patient">DNI Paciente</label>
+										<input type="text" class="form-control" placeholder="Patient DNI" id="dni-patient" name="dni-patient" >
+									</div>
+									<div class="form-group col-md-6">
+										<button type="button" class="btn btn-primary btn-lg" id="search-button">Buscar</button>
+									</div>
+									<div class="form-group col-md-6">
+
+										<label for="nombre_paciente">Nombres Paciente</label>
+										<input type="text" class="form-control" placeholder="Patient Name" id="nombre_paciente" name="nombre_paciente"  readonly>
+
+									</div>
+									<div class="form-group col-md-6">
+										<label for="departamento">Area</label>
+										<select class="form-control" id="departamento" name="departamento" required>
+											<option>Medicina General</option>
+											<option>Pediatria</option>
+											<option>Dental</option>
+											<option>Cirugia</option>
+										</select>
+
+									</div>
+									<div class="form-group col-md-6">
+										<label for="nombre_doctor">Nombre Doctor</label>
+										<input type="text" placeholder="nombre_doctor" class="form-control" id="nombre_doctor" name="nombre_doctor" required>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="fecha_cita">Fecha Cita</label>
+										<input type="date" placeholder="Appointment Date" class="form-control" id="fecha_cita" name="fecha_cita" required>
+									</div>
+									<div class="form-group col-md-6">
+										<label for="franjahoraria">Horario Atencion</label>
+										<select class="form-control" id="franjahoraria" name="franjahoraria" required>
+											<option>8AM-9AM</option>
+											<option>10AM-11AM</option>
+											<option>11AM-12pm</option>
+											<option>12PM-01PM</option>
+											<option>2PM-3PM</option>
+											<option>3PM-4PM</option>
+											<option>4PM-5PM</option>
+											<option>5PM-6PM</option>
+
+										</select>
+									</div>
+
+									<div class="form-group col-md-12">
+										<label for="problema">Problema</label>
+										<textarea placeholder="Problem" class="form-control" id="problema" name="problema"  rows="3"></textarea>
+									</div>
+
+									<div class="form-group col-md-12">
+										<label for="file">File</label>
+										<input type="file" class="form-control" id="file">
+									</div>
+
+									<div class="form-check col-md-12 mb-2">
+										<div class="text-left">
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input" type="checkbox" id="ex-check-2">
+												<label class="custom-control-label" for="ex-check-2">Please Confirm</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group col-md-6 mb-3">
+										<button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+									</div>
+								</div>
+							</form>
+							<!-- Alerts-->
+							<div class="alert alert-success alert-dismissible fade show" role="alert">
+								<strong>Successfully Done!</strong> Please add payment now
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="alert alert-warning alert-dismissible fade show" role="alert">
+								<strong>Holy guacamole!</strong> You should check in on some of those fields below.
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<!-- /Alerts-->
+						</div>
+					</div>
+					<!-- /Widget Item -->
+				</div>
+			</div>
+			<!-- /Main Content -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search-button').click(function() {
+            var dni = $('#dni-patient').val();
+            $.ajax({
+                type: 'GET',
+                url: '/buscar_paciente/',
+                data: {'dni-patient': dni},
+                success: function(response) {
+                    $('#nombre_paciente').val(response.pacientes[0].nombres);
+                } else {
+                	alert('No se encontraron pacientes.');
+                	}
+                },
+                error: function(response) {
+                    alert('Error al buscar el paciente.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock%}
